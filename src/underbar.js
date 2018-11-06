@@ -210,8 +210,11 @@
 
   // Determine whether any of the elements pass a truth test. If no iterator is
   // provided, provide a default one
-  _.some = function(collection, iterator) {
+  _.some = function(collection, iterator = _.identity) {
     // TIP: There's a very clever way to re-use every() here.
+    return !_.every(collection, (elem) => {
+      return !iterator(elem);
+    });
   };
 
 
@@ -233,12 +236,26 @@
   //   }, {
   //     bla: "even more stuff"
   //   }); // obj1 now contains key1, key2, key3 and bla
-  _.extend = function(obj) {
+  _.extend = function(obj, ...sources) {
+    _.each(sources, (source) => {
+      for (let key in source) {
+        obj[key] = source[key];
+      }
+    });
+    return obj;
   };
 
   // Like extend, but doesn't ever overwrite a key that already
   // exists in obj
-  _.defaults = function(obj) {
+  _.defaults = function(obj, ...sources) {
+    _.each(sources, (source) => {
+      for (let key in source) {
+        if (!obj.hasOwnProperty(key)) {
+          obj[key] = source[key];
+        }
+      }
+    });
+    return obj;
   };
 
 
@@ -265,6 +282,8 @@
       if (!alreadyCalled) {
         // TIP: .apply(this, arguments) is the standard way to pass on all of the
         // infromation from one function call to another.
+        // result = func.apply(this, arguments);
+        console.log('Inside func.', arguments);
         result = func.apply(this, arguments);
         alreadyCalled = true;
       }
@@ -282,6 +301,14 @@
   // already computed the result for the given argument and return that value
   // instead if possible.
   _.memoize = function(func) {
+    const cache = {};
+    return function() {
+      let key = JSON.stringify(arguments);
+      if (!cache.hasOwnProperty(key)) {
+        cache[key] = func.apply(this, arguments);
+      }
+      return cache[key];
+    };
   };
 
   // Delays a function for the given number of milliseconds, and then calls
@@ -291,6 +318,7 @@
   // parameter. For example _.delay(someFunction, 500, 'a', 'b') will
   // call someFunction('a', 'b') after 500ms
   _.delay = function(func, wait) {
+
   };
 
 
