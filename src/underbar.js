@@ -50,6 +50,16 @@
   // Note: _.each does not have a return value, but rather simply runs the
   // iterator function over each item in the input collection.
   _.each = function(collection, iterator) {
+
+    if (Array.isArray(collection)) { 
+      for (let i = 0; i < collection.length; i++) {
+        iterator(collection[i], i, collection);
+      }
+    } else {
+      for (let key in collection) { 
+        iterator(collection[key], key, collection);
+      }
+    }
   };
 
   // Returns the index at which value can be found in the array, or -1 if value
@@ -71,16 +81,39 @@
 
   // Return all elements of an array that pass a truth test.
   _.filter = function(collection, test) {
+    const list = [];
+    _.each(collection, (elem) => { 
+      if (test(elem)) { 
+        list.push(elem);
+      }
+    });
+    return list;
   };
 
   // Return all elements of an array that don't pass a truth test.
   _.reject = function(collection, test) {
     // TIP: see if you can re-use _.filter() here, without simply
     // copying code in and modifying it
+    return _.filter(collection, (elem) => {
+      return !test(elem);
+    });
   };
 
   // Produce a duplicate-free version of the array.
-  _.uniq = function(array, isSorted, iterator) {
+  _.uniq = function(array, isSorted, iterator = _.identity) {
+    // const result = [];
+    // const transforms = [];
+    // for (let i = 0; i < array.length; i++) {
+    //   if (!transforms.includes(iterator(array[i]))) {
+    //     result.push(array[i]);
+    //     transforms.push(iterator(array[i]));
+    //   }
+    // }
+    // return result;
+    const transforms = [];
+    return _.filter(array, function(elem) {
+      return transforms.includes(iterator(elem)) ? false : transforms.push(iterator(elem));
+    }); 
   };
 
 
