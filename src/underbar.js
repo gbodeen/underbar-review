@@ -178,8 +178,8 @@
       copyCollection.splice(0, 1);
     } 
 
-    for (let elem of copyCollection) {
-      accumulator = iterator(accumulator, elem);
+    for (let key in copyCollection) {
+      accumulator = iterator(accumulator, copyCollection[key]);
     }
 
     return accumulator;
@@ -189,7 +189,9 @@
   _.contains = function(collection, target) {
     // TIP: Many iteration problems can be most easily expressed in
     // terms of reduce(). Here's a freebie to demonstrate!
-    return _.reduce(collection, function(wasFound, item) {
+    const copyCollection = Object.values(collection);
+
+    return _.reduce(copyCollection, function(wasFound, item) {
       if (wasFound) {
         return true;
       }
@@ -199,8 +201,11 @@
 
 
   // Determine whether all of the elements match a truth test.
-  _.every = function(collection, iterator) {
+  _.every = function(collection, iterator = _.identity) {
     // TIP: Try re-using reduce() here.
+    return _.reduce(collection, (allMatch, item) => {
+      return allMatch && !!iterator(item);
+    }, true);
   };
 
   // Determine whether any of the elements pass a truth test. If no iterator is
