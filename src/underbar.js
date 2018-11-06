@@ -118,10 +118,18 @@
 
 
   // Return the results of applying an iterator to each element.
-  _.map = function(collection, iterator) {
+  _.map = function(collection, iterator = _.identity) {
     // map() is a useful primitive iteration function that works a lot
     // like each(), but in addition to running the operation on all
     // the members, it also maintains an array of results.
+
+    const results = []; 
+
+    _.each(collection, (elem) => { 
+      results.push(iterator(elem)); 
+    });
+
+    return results; 
   };
 
   /*
@@ -130,7 +138,7 @@
    * as an example of this.
    */
 
-  // Takes an array of objects and returns and array of the values of
+  // Takes an array of objects and returns an array of the values of
   // a certain property in it. E.g. take an array of people and return
   // an array of just their ages
   _.pluck = function(collection, key) {
@@ -162,7 +170,19 @@
   //     return total + number * number;
   //   }); // should be 5, regardless of the iterator function passed in
   //          No accumulator is given so the first element is used.
-  _.reduce = function(collection, iterator, accumulator) {
+  _.reduce = function(collection, iterator = _.identity, accumulator) {
+    const copyCollection = [...collection]; 
+    
+    if (accumulator === undefined) { 
+      accumulator = collection[0]; 
+      copyCollection.splice(0, 1);
+    } 
+
+    for (let elem of copyCollection) {
+      accumulator = iterator(accumulator, elem);
+    }
+
+    return accumulator;
   };
 
   // Determine if the array or object contains a given value (using `===`).
