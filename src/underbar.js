@@ -283,7 +283,6 @@
         // TIP: .apply(this, arguments) is the standard way to pass on all of the
         // infromation from one function call to another.
         // result = func.apply(this, arguments);
-        console.log('Inside func.', arguments);
         result = func.apply(this, arguments);
         alreadyCalled = true;
       }
@@ -318,6 +317,19 @@
   // parameter. For example _.delay(someFunction, 500, 'a', 'b') will
   // call someFunction('a', 'b') after 500ms
   _.delay = function(func, wait) {
+    const args = [...arguments].slice(2);
+    // console.log(args);
+    
+    setTimeout( function () {
+      func.apply(this, args);
+    }, wait);
+
+    // const args = [...arguments].slice(2);
+    // // console.log(args);
+    
+    // setTimeout( function () {
+    //   func.call(this, ...args);
+    // }, wait);
 
   };
 
@@ -333,6 +345,9 @@
   // input array. For a tip on how to make a copy of an array, see:
   // http://mdn.io/Array.prototype.slice
   _.shuffle = function(array) {
+    const copyArr = [...array];
+    
+    return copyArr.sort((a, b) => Math.random() - 0.5);
   };
 
 
@@ -347,6 +362,19 @@
   // Calls the method named by functionOrKey on each value in the list.
   // Note: You will need to learn a bit about .apply to complete this.
   _.invoke = function(collection, functionOrKey, args) {
+    const args = [...arguments]; 
+    if (typeof functionOrKey === 'function') { 
+      // return _.map(collection, (elem) => {
+      //   return functionOrKey.call(this, elem);
+      // }); 
+     
+    } 
+
+    // return _.map(collection, (elem) => { 
+    //   return elem[functionOrKey];
+    // });
+
+
   };
 
   // Sort the object's values by a criterion produced by an iterator.

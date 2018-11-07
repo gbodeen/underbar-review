@@ -125,7 +125,6 @@
         _.each(letters, function(letter, index) {
           iterations.push([letter, index]);
         });
-        console.log(iterations);
         expect(iterations).to.eql([['a', 0], ['b', 1], ['c', 2]]);
       });
 
